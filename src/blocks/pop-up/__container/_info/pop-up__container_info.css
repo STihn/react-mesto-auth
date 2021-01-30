@@ -1,0 +1,6 @@
+.pop-up__container_info {
+  display: flex;
+  flex-direction: column;
+  min-width: 308px;
+  padding: 50px 18px;
+}
