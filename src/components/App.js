@@ -82,7 +82,7 @@ function App () {
             })
             setCurrentCards(newCardLists);
         })
-        .catch(error => console.log(error.message));
+        .catch(error => console.log(error));
     }
 
     function defineCard(_id, newCard) {
@@ -98,31 +98,31 @@ function App () {
             api.likeCard(_id).then((newCard) => {
                 defineCard(_id, newCard);
             })
-            .catch(error => console.log(error.message));
+            .catch(error => console.log(error));
         } else if(isLiked) {
             api.noLikeCard(_id).then((newCard) => {
                 defineCard(_id, newCard)
             }) 
-            .catch(error => console.log(error.message));
+            .catch(error => console.log(error));
         }
     }
 
     function handleUpdateUser(data) {
         api.editProfile(data)
           .then((currentUser) => setCurrentUser(currentUser))
-          .catch(error => console.log(error.message))
+          .catch(error => console.log(error))
           .finally(closeAllPopups());
     }
 
     function handleUpdateAvatar(data) {
         api.editAvatar(data).then((newAvatar) => setCurrentUser(newAvatar))
-        .catch(error => console.log(error.message))
+        .catch(error => console.log(error))
         .finally(closeAllPopups());
     }
 
     function handleAddPlaceSubmit(data) {
         api.createCard(data).then((newCard) => setCurrentCards([newCard, ...currentCards]))
-        .catch(error => console.log(error.message))
+        .catch(error => console.log(error))
         .finally(closeAllPopups());
     }
 
@@ -133,11 +133,7 @@ function App () {
             setToolTip(true)
             setMessage('Вы успешно зарегистрировались!')
             setInfoToolTipPopupOpen(true)
-          }
-          else {
-            setToolTip(false)
-            setMessage(`${res.error}`)
-            setInfoToolTipPopupOpen(true)
+            history.push("/sign-in")
           }
         })
         .catch(res => {
@@ -161,7 +157,9 @@ function App () {
           history.push('/');
         })
         .catch(res => {
-            console.log('Токен не передан или передан не в том формате');
+            if(res === 401) {
+                console.log('Токен не передан или передан не в том формате');
+            }
         });
       }
     };
@@ -173,14 +171,7 @@ function App () {
     const onLogin = (email, password) => {
       return authorize(email, password)
         .then((res) => {
-          if (!res) {
-            setToolTip(false);
-            setMessage(`Что-то пошло не так! Попробуйте ещё раз.`);
-            setInfoToolTipPopupOpen(true);
-          }
-          else {
-            tokenCheck();
-          }
+            tokenCheck()
         })
         .catch((res) => {
             if (res === 400) {
@@ -194,7 +185,6 @@ function App () {
                 setMessage(`Пользователь с email не найден`);
                 console.log('пользователь с email не найден');
             }
-            console.log(res)
         });
         
     }

@@ -9,10 +9,10 @@ export const register = (email, password) => {
     body: JSON.stringify({ email, password }),
   })
     .then((res) => {
-      if (res.ok) {
-        return res.json();
+      if (!res.ok) {
+        return Promise.reject(res.status)
       }
-      return Promise.reject(res.status);
+      return res.json();
     })
 };
   
@@ -47,10 +47,10 @@ export const authorize = (email, password) => {
     },
   })
     .then((res) => {
-      if (res.ok) {
-        return res.json()
+      if (!res.ok) {
+        return Promise.reject(res.status)
       }
-      return Promise.reject(res.status)
+      return res.json()
     })
     .then((data) => data);
 };

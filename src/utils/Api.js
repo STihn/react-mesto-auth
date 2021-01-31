@@ -8,31 +8,28 @@ class Api {
       return fetch(`${this.baseUrl}/cards`,{
         method: 'GET',
         headers:  this.headers
-      }).then(this._status);
+      }).then(res => this._status(res));
     }
 
     likeCard(cardId){
       return fetch(`${this.baseUrl}/cards/likes/${cardId}`,{
         method: 'PUT',
         headers:  this.headers
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     noLikeCard(cardId) {
       return fetch(`${this.baseUrl}/cards/likes/${cardId}`,{
         method: 'DELETE',
         headers:  this.headers
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     deleteCard(cardId) {
       return fetch(`${this.baseUrl}/cards/${cardId}`,{
         method: 'DELETE',
         headers:  this.headers
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     createCard(data) {
@@ -43,8 +40,7 @@ class Api {
           name: data.name,
           link: data.link
         })
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     editProfile(data) {
@@ -55,8 +51,7 @@ class Api {
             name: data.name,
             about: data.about
         })
-      }).then(this._status)
-        .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     editAvatar(data) {
@@ -66,15 +61,14 @@ class Api {
         body: JSON.stringify({
             avatar: data.avatar
         })
-      })
+      }).then(res => this._status(res));
     }
 
     getUserProfile() {
       return fetch(`${this.baseUrl}/users/me`,{
         method: 'GET',
         headers:  this.headers
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(res => this._status(res));
     }
 
     _status(res) {
