@@ -82,6 +82,7 @@ function App () {
             })
             setCurrentCards(newCardLists);
         })
+        .catch(error => console.log(error.message));
     }
 
     function defineCard(_id, newCard) {
@@ -97,26 +98,31 @@ function App () {
             api.likeCard(_id).then((newCard) => {
                 defineCard(_id, newCard);
             })
+            .catch(error => console.log(error.message));
         } else if(isLiked) {
             api.noLikeCard(_id).then((newCard) => {
                 defineCard(_id, newCard)
-            })
+            }) 
+            .catch(error => console.log(error.message));
         }
     }
 
     function handleUpdateUser(data) {
         api.editProfile(data)
           .then((currentUser) => setCurrentUser(currentUser))
+          .catch(error => console.log(error.message))
           .finally(closeAllPopups());
     }
 
     function handleUpdateAvatar(data) {
         api.editAvatar(data).then((newAvatar) => setCurrentUser(newAvatar))
+        .catch(error => console.log(error.message))
         .finally(closeAllPopups());
     }
 
     function handleAddPlaceSubmit(data) {
-        api.createCard(data).then((newCard) => setCurrentCards([...currentCards,newCard]))
+        api.createCard(data).then((newCard) => setCurrentCards([newCard, ...currentCards]))
+        .catch(error => console.log(error.message))
         .finally(closeAllPopups());
     }
 
@@ -134,7 +140,14 @@ function App () {
             setInfoToolTipPopupOpen(true)
           }
         })
-        .catch((err) => console.log(err))
+        .catch(res => {
+            if (res === 400) {
+                setToolTip(false)
+                setInfoToolTipPopupOpen(true)
+                setMessage(`некорректно заполнено одно из полей `);
+                console.log('некорректно заполнено одно из полей ');
+            }
+        });
     };
   
     const tokenCheck = () => {
@@ -147,7 +160,9 @@ function App () {
           }
           history.push('/');
         })
-          .catch((err) => console.log(err))
+        .catch(res => {
+            console.log('Токен не передан или передан не в том формате');
+        });
       }
     };
   
@@ -166,8 +181,22 @@ function App () {
           else {
             tokenCheck();
           }
-        }
-        );
+        })
+        .catch((res) => {
+            if (res === 400) {
+                setToolTip(false)
+                setInfoToolTipPopupOpen(true)
+                setMessage(`Не передано одно из полей`);
+                console.log('Не передано одно из полей');
+            } else if (res === 401) {
+                setToolTip(false)
+                setInfoToolTipPopupOpen(true)
+                setMessage(`Пользователь с email не найден`);
+                console.log('пользователь с email не найден');
+            }
+            console.log(res)
+        });
+        
     }
   
     const onLogOut = () => {

@@ -12,9 +12,8 @@ export const register = (email, password) => {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(res.json());
+      return Promise.reject(res.status);
     })
-    .catch(error => console.log(error.message));
 };
   
 export const authorize = (email, password) => {
@@ -26,11 +25,8 @@ export const authorize = (email, password) => {
     body: JSON.stringify({ email, password }),
   })
     .then((res) => {
-      if (res.status === 400) {
-        console.log('Не передано одно из полей');
-      }
-      else if (res.status === 401) {
-        console.log('пользователь с email не найден');
+      if (!res.ok) {
+        return Promise.reject(res.status);
       }
       return res.json();
     })
@@ -39,8 +35,7 @@ export const authorize = (email, password) => {
         localStorage.setItem('jwt', data.token);
         return data;
       }
-    })
-    .catch(error => console.log(error.message));
+    });
 };
 
   export const getContent = (token) => {
@@ -55,8 +50,7 @@ export const authorize = (email, password) => {
       if (res.ok) {
         return res.json()
       }
-      return Promise.reject(res.json())
+      return Promise.reject(res.status)
     })
-    .then((data) => data)
-    .catch(err => console.log(err.message));
+    .then((data) => data);
 };

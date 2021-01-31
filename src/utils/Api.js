@@ -8,8 +8,7 @@ class Api {
       return fetch(`${this.baseUrl}/cards`,{
         method: 'GET',
         headers:  this.headers
-      }).then(this._status)
-      .catch(error => console.log(error.message));
+      }).then(this._status);
     }
 
     likeCard(cardId){
